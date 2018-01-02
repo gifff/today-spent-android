@@ -29,7 +29,7 @@ public class SpendingDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        mSpendingAmount = (TextView) getActivity().findViewById(R.id.tv_spending_amount);
+        mSpendingAmount = (TextView) getActivity().findViewById(R.id.tv_spending_detail_amount);
 
         mSpendingAmount.setText("Amount: " + getActivity().getIntent().getStringExtra("amount"));
     }

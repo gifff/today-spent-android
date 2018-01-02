@@ -4,6 +4,7 @@ import id.my.gdf.todayspent.model.Index;
 import id.my.gdf.todayspent.model.Login;
 import id.my.gdf.todayspent.model.LoginBody;
 import id.my.gdf.todayspent.model.SingleSpending;
+import id.my.gdf.todayspent.model.SpendingList;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -32,4 +33,7 @@ public interface TodaySpentService {
 
     @GET("/spending/{spendingId}")
     Call<SingleSpending> getSpendingDetail(@Header("Authorization") String token, @Path("spendingId") String spendingId);
+
+    @GET("/spending/all")
+    Call<SpendingList> getSpendingList(@Header("Authorization") String token);
 }

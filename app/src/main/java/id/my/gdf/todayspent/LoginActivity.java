@@ -14,16 +14,14 @@ import android.widget.Toast;
 import id.my.gdf.todayspent.model.Login;
 import id.my.gdf.todayspent.model.LoginBody;
 import id.my.gdf.todayspent.model.SingleSpending;
+import id.my.gdf.todayspent.service.Service;
 import id.my.gdf.todayspent.service.TodaySpentService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     public final static String APP_TAG = LoginActivity.class.getSimpleName();
-    private Retrofit retrofit;
     private TodaySpentService todaySpentService;
 
     private EditText mUsername;
@@ -45,12 +43,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mLoadingLayout = (FrameLayout) findViewById(R.id.layout_loading);
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://today-spent.gdf.my.id/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        todaySpentService = retrofit.create(TodaySpentService.class);
+        todaySpentService = Service.getInstance().getService();
 
         sharedPref = this.getSharedPreferences("todayspent", MODE_PRIVATE);
 
@@ -65,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (token != null) {
             disableLogin();
             todaySpentService.getSpendingDetail(token, "1")
-                    .enqueue(new Callback<SingleSpending>() {
+                        .enqueue(new Callback<SingleSpending>() {
                         @Override
                         public void onResponse(Call<SingleSpending> call, Response<SingleSpending> response) {
                             try{
