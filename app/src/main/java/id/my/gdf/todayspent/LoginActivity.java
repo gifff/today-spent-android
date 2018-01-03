@@ -16,6 +16,7 @@ import id.my.gdf.todayspent.model.LoginBody;
 import id.my.gdf.todayspent.model.SingleSpending;
 import id.my.gdf.todayspent.service.Service;
 import id.my.gdf.todayspent.service.TodaySpentService;
+import id.my.gdf.todayspent.spendings.SpendingsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -171,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void showSpendingDetail(SingleSpending spending) {
         if (spending != null){
-            Intent intent = new Intent(this, SpendingListActivity.class);
+            Intent intent = new Intent(this, SpendingsActivity.class);
             intent.putExtra("amount", "" + spending.getSpending().getUser_id());
             startActivity(intent);
             this.finish();

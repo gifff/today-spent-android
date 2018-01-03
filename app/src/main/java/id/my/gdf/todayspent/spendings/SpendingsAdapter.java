@@ -1,4 +1,4 @@
-package id.my.gdf.todayspent;
+package id.my.gdf.todayspent.spendings;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import id.my.gdf.todayspent.R;
 import id.my.gdf.todayspent.model.SpendingList;
 
 /**
  * Created by prime10 on 1/2/18.
  */
 
-public class SpendingListAdapter extends RecyclerView.Adapter<SpendingListAdapter.SpendingListViewHolder>{
+public class SpendingsAdapter extends RecyclerView.Adapter<SpendingsAdapter.SpendingListViewHolder>{
 
     private List<SpendingList.SpendingsBean> mSpendingData;
     private java.text.DateFormat dateFormatter;
