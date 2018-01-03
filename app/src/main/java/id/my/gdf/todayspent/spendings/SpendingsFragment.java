@@ -16,16 +16,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import id.my.gdf.todayspent.LoginActivity;
 import id.my.gdf.todayspent.R;
+import id.my.gdf.todayspent.login.LoginActivity;
 import id.my.gdf.todayspent.model.SpendingList;
 import id.my.gdf.todayspent.service.TodaySpentService;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SpendingsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * Spendings Fragment
  */
 public class SpendingsFragment extends Fragment implements SpendingsContract.View{
 
@@ -82,6 +79,8 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
         mRecyclerViewSpendingList.setAdapter(mSpendingsAdapter);
 
         mPresenter.loadSpendings();
+
+        this.setHasOptionsMenu(true);
 
         return root;
     }
