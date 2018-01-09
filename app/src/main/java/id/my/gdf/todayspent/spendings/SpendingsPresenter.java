@@ -2,14 +2,13 @@ package id.my.gdf.todayspent.spendings;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import id.my.gdf.todayspent.model.SpendingList;
+import java.util.List;
+
+import id.my.gdf.todayspent.data.Spending;
+import id.my.gdf.todayspent.data.SpendingsDataSource;
 import id.my.gdf.todayspent.service.Service;
 import id.my.gdf.todayspent.service.TodaySpentService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,9 +23,10 @@ public class SpendingsPresenter implements SpendingsContract.Presenter {
     private final SpendingsContract.View mSpendingsView;
 
     private final TodaySpentService todaySpentService;
+    private final SpendingsDataSource mDataSource;
     private SharedPreferences sharedPref;
 
-    public SpendingsPresenter(@NonNull SpendingsContract.View spendingsView, @NonNull SharedPreferences sharedPref) {
+    public SpendingsPresenter(@NonNull SpendingsContract.View spendingsView, @NonNull SharedPreferences sharedPref, @NonNull SpendingsDataSource dataSource) {
 
         mSpendingsView = checkNotNull(spendingsView, "spendingsView cannot be null!");
         this.sharedPref = checkNotNull(sharedPref, "sharedPref cannot be null!");
@@ -34,6 +34,7 @@ public class SpendingsPresenter implements SpendingsContract.Presenter {
         mSpendingsView.setPresenter(this);
 
         todaySpentService = Service.getInstance().getService();
+        mDataSource = dataSource;
 
 
     }
@@ -45,29 +46,17 @@ public class SpendingsPresenter implements SpendingsContract.Presenter {
 
     @Override
     public void loadSpendings() {
-        todaySpentService.getSpendingList(this.sharedPref.getString("token", null))
-                .enqueue(new Callback<SpendingList>() {
-                    @Override
-                    public void onResponse(Call<SpendingList> call, Response<SpendingList> response) {
-                        try {
-                            if (response.isSuccessful()) {
-                                mSpendingsView.showSpendings(response.body());
-                            } else {
-                                mSpendingsView.showErrorToast("Fetching spending list failed");
-                                Log.e(TAG, "Fetching spending list failed");
-                            }
-                        } catch (Exception e) {
-                            mSpendingsView.showErrorToast("Fetching spending list failed");
-                            Log.e(TAG, "Fetching spending list failed");
-                        }
-                    }
+        mDataSource.getSpendings(new SpendingsDataSource.LoadSpendingsCallback() {
+            @Override
+            public void onSpendingsLoaded(List<Spending> spendings) {
+                mSpendingsView.showSpendings(spendings);
+            }
 
-                    @Override
-                    public void onFailure(Call<SpendingList> call, Throwable t) {
-                        mSpendingsView.showErrorToast("Fetching spending list failed");
-                        Log.e(TAG, "Fetching spending list failed");
-                    }
-                });
+            @Override
+            public void onDataNotAvailable() {
+                mSpendingsView.showErrorToast("The list is empty");
+            }
+        });
     }
 
     @Override

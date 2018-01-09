@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import id.my.gdf.todayspent.R;
-import id.my.gdf.todayspent.model.SpendingList;
+import id.my.gdf.todayspent.data.Spending;
 
 /**
  * Created by prime10 on 1/2/18.
@@ -22,10 +22,10 @@ import id.my.gdf.todayspent.model.SpendingList;
 
 public class SpendingsAdapter extends RecyclerView.Adapter<SpendingsAdapter.SpendingListViewHolder>{
 
-    private List<SpendingList.SpendingsBean> mSpendingData;
+    private List<Spending> mSpendingData;
     private java.text.DateFormat dateFormatter;
 
-    public void setSpendingData(List<SpendingList.SpendingsBean> data) {
+    public void setSpendingData(List<Spending> data) {
         this.mSpendingData = data;
         notifyDataSetChanged();
     }

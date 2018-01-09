@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import id.my.gdf.todayspent.R;
+import id.my.gdf.todayspent.data.Spending;
 import id.my.gdf.todayspent.login.LoginActivity;
-import id.my.gdf.todayspent.model.SpendingList;
 import id.my.gdf.todayspent.service.TodaySpentService;
 
 /**
@@ -102,8 +104,8 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
     }
 
     @Override
-    public void showSpendings(SpendingList spendingList) {
-        mSpendingsAdapter.setSpendingData(spendingList.getSpendings());
+    public void showSpendings(List<Spending> spendingList) {
+        mSpendingsAdapter.setSpendingData(spendingList);
     }
 
     @Override
