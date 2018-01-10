@@ -20,6 +20,8 @@ public interface SpendingsContract {
 
         void showErrorToast(String message);
 
+        void showAddSpending();
+
         // void setLoadingIndicator(boolean active);
 
     }
@@ -29,6 +31,8 @@ public interface SpendingsContract {
         void loadSpendings();
 
         void logout();
+
+        void addSpending();
 
     }
 

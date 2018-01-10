@@ -16,26 +16,30 @@ import com.google.common.base.Objects;
 @Entity(tableName = "spendings")
 public final class Spending {
 
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "local_id")
-    private final long mLocalId;
+    private long mLocalId;
 
-    @Nullable
     @ColumnInfo(name = "remote_id")
-    private final long mRemoteId;
+    private long mRemoteId;
 
-    @NonNull
     @ColumnInfo(name = "amount")
-    private final long mAmount;
+    private long mAmount;
 
     @NonNull
     @ColumnInfo(name = "date")
-    private final String mDate;
+    private String mDate;
 
     @Ignore
+    public  Spending(@NonNull long mAmount, @NonNull String mDate) {
+        this.mAmount = mAmount;
+        this.mDate = mDate;
+    }
+    @Ignore
     public Spending(@NonNull long mLocalId, @NonNull long mAmount, @NonNull String mDate) {
-        this(mLocalId, -1, mAmount, mDate);
+        this.mLocalId = mLocalId;
+        this.mAmount = mAmount;
+        this.mDate = mDate;
     }
 
     public Spending(@NonNull long mLocalId, long mRemoteId, @NonNull long mAmount, @NonNull String mDate) {

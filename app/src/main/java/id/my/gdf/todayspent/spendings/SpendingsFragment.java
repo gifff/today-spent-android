@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import id.my.gdf.todayspent.R;
+import id.my.gdf.todayspent.addeditspending.AddEditSpendingActivity;
 import id.my.gdf.todayspent.data.Spending;
 import id.my.gdf.todayspent.login.LoginActivity;
 import id.my.gdf.todayspent.service.TodaySpentService;
@@ -80,6 +82,17 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
 
         mRecyclerViewSpendingList.setAdapter(mSpendingsAdapter);
 
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_spending);
+
+        fab.setImageResource(R.drawable.ic_add);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.addSpending();
+            }
+        });
+
         mPresenter.loadSpendings();
 
         this.setHasOptionsMenu(true);
@@ -119,5 +132,12 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
     @Override
     public void showErrorToast(String message) {
         Toast.makeText(this.getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showAddSpending() {
+        Intent intent = new Intent(getContext(), AddEditSpendingActivity.class);
+        startActivityForResult(intent, AddEditSpendingActivity.REQUEST_ADD_SPENDING);
+
     }
 }

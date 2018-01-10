@@ -66,4 +66,9 @@ public class SpendingsPresenter implements SpendingsContract.Presenter {
         editor.commit();
         mSpendingsView.showLogin();
     }
+
+    @Override
+    public void addSpending() {
+        mSpendingsView.showAddSpending();
+    }
 }
