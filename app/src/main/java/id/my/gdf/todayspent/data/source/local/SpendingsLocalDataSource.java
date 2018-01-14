@@ -129,6 +129,18 @@ public class SpendingsLocalDataSource implements SpendingsDataSource {
     }
 
     @Override
+    public void updateSpending(@NonNull final Spending spending) {
+        Runnable updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mSpendingsDao.updateSpending(spending);
+            }
+        };
+
+        mAppExecutors.diskIO().execute(updateRunnable);
+    }
+
+    @Override
     public void synchronize() {
         // This involves networkIO
         /*

@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -22,8 +24,13 @@ import id.my.gdf.todayspent.data.Spending;
 
 public class SpendingsAdapter extends RecyclerView.Adapter<SpendingsAdapter.SpendingListViewHolder>{
 
+    private final SpendingsContract.View mSpendingsView;
     private List<Spending> mSpendingData;
     private java.text.DateFormat dateFormatter;
+
+    public SpendingsAdapter(SpendingsContract.View mSpendingsView) {
+        this.mSpendingsView = mSpendingsView;
+    }
 
     public void setSpendingData(List<Spending> data) {
         this.mSpendingData = data;
@@ -45,8 +52,16 @@ public class SpendingsAdapter extends RecyclerView.Adapter<SpendingsAdapter.Spen
     }
 
     @Override
-    public void onBindViewHolder(SpendingListViewHolder holder, int position) {
+    public void onBindViewHolder(final SpendingListViewHolder holder, final int position) {
         Date date = null;
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                mSpendingsView.editSpending(mSpendingData.get(holder.getAdapterPosition()).getLocalId());
+            }
+        });
+
         try {
             date = dateFormatter.parse(mSpendingData.get(position).getDate());
             SimpleDateFormat formatter = new SimpleDateFormat("d/MM/yyyy");
@@ -65,16 +80,29 @@ public class SpendingsAdapter extends RecyclerView.Adapter<SpendingsAdapter.Spen
         return mSpendingData.size();
     }
 
+    public long getSpendingLocalIdByPosition(int position) {
+        return mSpendingData.get(position).getLocalId();
+    }
+
+    public void removeItem(int position) {
+        mSpendingData.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public static class SpendingListViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView mSpendingDateTextView;
         public final TextView mSpendingAmountTextView;
+        public final RelativeLayout mBackgroundLayout;
+        public final LinearLayout mForegroundLayout;
 
         public SpendingListViewHolder(View itemView) {
             super(itemView);
 
             mSpendingAmountTextView = (TextView) itemView.findViewById(R.id.tv_spending_amount);
             mSpendingDateTextView = (TextView) itemView.findViewById(R.id.tv_spending_date);
+            mBackgroundLayout = (RelativeLayout) itemView.findViewById(R.id.view_background);
+            mForegroundLayout = (LinearLayout) itemView.findViewById(R.id.view_foreground);
         }
     }
 

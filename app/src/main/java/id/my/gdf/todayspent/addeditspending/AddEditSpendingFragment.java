@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -24,6 +26,10 @@ import id.my.gdf.todayspent.R;
  */
 
 public class AddEditSpendingFragment extends Fragment implements AddEditSpendingContract.View {
+
+    public static final String ARGUMENT_EDIT_SPENDING_ID = "EDIT_SPENDING_ID";
+
+    public final String TAG = getClass().getSimpleName();
 
     private final Calendar mCalendar = Calendar.getInstance();
     private AddEditSpendingContract.Presenter mPresenter;
@@ -46,7 +52,8 @@ public class AddEditSpendingFragment extends Fragment implements AddEditSpending
         mAmountEditText = (EditText)root.findViewById(R.id.edt_spending_amount);
         mDateEditText = (EditText)root.findViewById(R.id.edt_spending_date);
         mSaveButton = (Button)root.findViewById(R.id.btn_save_spending);
-        // TODO: Populate date when creation and both amount and date when updating
+
+        updateLabel();
         final DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -56,12 +63,6 @@ public class AddEditSpendingFragment extends Fragment implements AddEditSpending
                 updateLabel();
             }
 
-            private void updateLabel() {
-                String format = "dd/MM/yyyy";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.US);
-
-                mDateEditText.setText(simpleDateFormat.format(mCalendar.getTime()));
-            }
         };
 
         mDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +84,19 @@ public class AddEditSpendingFragment extends Fragment implements AddEditSpending
 
         // setHasOptionMenu(true);
         return root;
+    }
+
+    private void updateLabel() {
+        String format = "dd/MM/yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.US);
+
+        mDateEditText.setText(simpleDateFormat.format(mCalendar.getTime()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
     }
 
     @Nullable
@@ -109,11 +123,18 @@ public class AddEditSpendingFragment extends Fragment implements AddEditSpending
 
     @Override
     public void setAmount(String amount) {
+        Log.d(TAG, "setAmount: " + amount);
         mAmountEditText.setText(amount);
     }
 
     @Override
     public void setDate(String date) {
-
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            mCalendar.setTime(dateFormatter.parse(date));
+            updateLabel();
+        } catch (ParseException e) {
+            Log.wtf(TAG, "setDate() parse error.");
+        }
     }
 }

@@ -29,7 +29,7 @@ public interface AddEditSpendingContract {
 
         void saveSpending(String amount, Date date);
 
-        void populateTask();
+        void populateSpending();
 
     }
 }

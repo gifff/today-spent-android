@@ -22,6 +22,10 @@ public interface SpendingsContract {
 
         void showAddSpending();
 
+        void showEditSpending(Spending spending);
+
+        void editSpending(long spendingLocalId);
+
         // void setLoadingIndicator(boolean active);
 
     }
@@ -33,6 +37,10 @@ public interface SpendingsContract {
         void logout();
 
         void addSpending();
+
+        void deleteSpending(long spendingLocalId);
+
+        void editSpending(long spendingLocalId);
 
     }
 

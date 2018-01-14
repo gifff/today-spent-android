@@ -16,15 +16,17 @@ public interface SpendingsDataSource {
 
     void saveSpending(@NonNull Spending spending);
 
-    void updateSpendingAmount(@NonNull long spendingLocalId, @NonNull long amount);
+    void updateSpendingAmount(long spendingLocalId, long amount);
 
-    void updateSpendingDate(@NonNull long spendingLocalId, @NonNull String date);
+    void updateSpendingDate(long spendingLocalId, @NonNull String date);
+
+    void updateSpending(@NonNull Spending spending);
 
     void synchronize();
 
     void deleteAllSpendings();
 
-    void deleteSpending(@NonNull long spendingLocalId);
+    void deleteSpending(long spendingLocalId);
 
     interface LoadSpendingsCallback {
 

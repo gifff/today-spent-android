@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import id.my.gdf.todayspent.R;
 import id.my.gdf.todayspent.addeditspending.AddEditSpendingActivity;
+import id.my.gdf.todayspent.addeditspending.AddEditSpendingFragment;
 import id.my.gdf.todayspent.data.Spending;
 import id.my.gdf.todayspent.login.LoginActivity;
 import id.my.gdf.todayspent.service.TodaySpentService;
@@ -28,7 +31,7 @@ import id.my.gdf.todayspent.service.TodaySpentService;
 /**
  * Spendings Fragment
  */
-public class SpendingsFragment extends Fragment implements SpendingsContract.View{
+public class SpendingsFragment extends Fragment implements SpendingsContract.View, SpendingListItemTouchHelper.SpendingListItemTouchHelperListener{
 
     private TextView mAmountTextView;
     private RecyclerView mRecyclerViewSpendingList;
@@ -78,9 +81,13 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
         mRecyclerViewSpendingList.setLayoutManager(layoutManager);
         mRecyclerViewSpendingList.setHasFixedSize(true);
 
-        mSpendingsAdapter = new SpendingsAdapter();
+        mSpendingsAdapter = new SpendingsAdapter(this);
 
         mRecyclerViewSpendingList.setAdapter(mSpendingsAdapter);
+        mRecyclerViewSpendingList.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperSimpleCallback = new SpendingListItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperSimpleCallback).attachToRecyclerView(mRecyclerViewSpendingList);
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_add_spending);
@@ -98,6 +105,15 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
         this.setHasOptionsMenu(true);
 
         return root;
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof SpendingsAdapter.SpendingListViewHolder) {
+            long localId = mSpendingsAdapter.getSpendingLocalIdByPosition(viewHolder.getAdapterPosition());
+            mPresenter.deleteSpending(localId);
+            mSpendingsAdapter.removeItem(viewHolder.getAdapterPosition());
+        }
     }
 
     @Override
@@ -139,5 +155,17 @@ public class SpendingsFragment extends Fragment implements SpendingsContract.Vie
         Intent intent = new Intent(getContext(), AddEditSpendingActivity.class);
         startActivityForResult(intent, AddEditSpendingActivity.REQUEST_ADD_SPENDING);
 
+    }
+
+    @Override
+    public void showEditSpending(Spending spending) {
+        Intent intent = new Intent(getContext(), AddEditSpendingActivity.class);
+        intent.putExtra(AddEditSpendingFragment.ARGUMENT_EDIT_SPENDING_ID, spending.getLocalId());
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void editSpending(long spendingLocalId) {
+        mPresenter.editSpending(spendingLocalId);
     }
 }

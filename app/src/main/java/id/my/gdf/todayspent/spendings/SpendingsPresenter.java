@@ -2,6 +2,7 @@ package id.my.gdf.todayspent.spendings;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.List;
 
@@ -70,5 +71,25 @@ public class SpendingsPresenter implements SpendingsContract.Presenter {
     @Override
     public void addSpending() {
         mSpendingsView.showAddSpending();
+    }
+
+    @Override
+    public void deleteSpending(long spendingLocalId) {
+        mDataSource.deleteSpending(spendingLocalId);
+    }
+
+    @Override
+    public void editSpending(final long spendingLocalId) {
+        mDataSource.getSpending(spendingLocalId, new SpendingsDataSource.GetSpendingCallback() {
+            @Override
+            public void onSpendingLoaded(Spending spending) {
+                mSpendingsView.showEditSpending(spending);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                Log.v(TAG, "Data not available");
+            }
+        });
     }
 }

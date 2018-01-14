@@ -16,6 +16,9 @@ import com.google.common.base.Objects;
 @Entity(tableName = "spendings")
 public final class Spending {
 
+    @Ignore
+    public final static long NULL_ID = -1;
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "local_id")
     private long mLocalId;
